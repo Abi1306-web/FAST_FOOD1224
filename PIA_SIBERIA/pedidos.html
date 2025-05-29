@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Pedido - TOSTADERIA TOSTI TOSTI</title>
+    <link href="pedidos.php">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #fffc2e;
+            color: rgb(0, 0, 0);
+            padding: 1em 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .pedido-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pedido-container h2 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+            text-align: center;
+        }
+
+        .item-pedido {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-pedido:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-info h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .item-precio {
+            font-weight: bold;
+            color: green;
+            margin-left: 15px;
+        }
+
+        .item-cantidad {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .item-cantidad label {
+            margin-right: 5px;
+        }
+
+        .item-cantidad input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .resumen-pedido {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .resumen-pedido h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+            text-align: center;
+        }
+
+        .total-pedido {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .boton-pagar {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .boton-pagar:hover {
+            background-color: #0056b3;
+        }
+
+        .qr-pago {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .qr-pago img {
+            max-width: 200px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .volver-inicio {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .volver-inicio:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Realizar Pedido</h1>
+    </header>
+
+    <div class="pedido-container">
+        <h2>Selecciona tus productos</h2>
+        <form id="formulario-pedido">
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #1</h3>
+                    <p>2 Tostadas grandes, 1 Taco grande</p>
+                </div>
+                <span class="item-precio">$165 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt1">Cantidad:</label>
+                    <input type="number" id="pkt1" name="pkt1" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #2</h3>
+                    <p>3 Tacos grandes</p>
+                </div>
+                <span class="item-precio">$135 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt2">Cantidad:</label>
+                    <input type="number" id="pkt2" name="pkt2" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #3</h3>
+                    <p>3 Tostadas grandes</p>
+                </div>
+                <span class="item-precio">$180 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt3">Cantidad:</label>
+                    <input type="number" id="pkt3" name="pkt3" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #4</h3>
+                    <p>2 Tacos grandes, 1 Tostada Jr.</p>
+                </div>
+                <span class="item-precio">$125 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt4">Cantidad:</label>
+                    <input type="number" id="pkt4" name="pkt4" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #5</h3>
+                    <p>2 Tostadas, 1/2 Consomé</p>
+                </div>
+                <span class="item-precio">$155 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt5">Cantidad:</label>
+                    <input type="number" id="pkt5" name="pkt5" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT #6</h3>
+                    <p>1 Tostada, 1 Taco, 1/2 Consomé</p>
+                </div>
+                <span class="item-precio">$140 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt6">Cantidad:</label>
+                    <input type="number" id="pkt6" name="pkt6" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT Individual</h3>
+                    <p>1 Tostada, 1/2 Consomé</p>
+                </div>
+                <span class="item-precio">$90 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt_individual">Cantidad:</label>
+                    <input type="number" id="pkt_individual" name="pkt_individual" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>PKT Familiar</h3>
+                    <p>3 Tostadas, 2 Tacos, 1L Caldo</p>
+                </div>
+                <span class="item-precio">$320 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pkt_familiar">Cantidad:</label>
+                    <input type="number" id="pkt_familiar" name="pkt_familiar" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Tostadas Jr.</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$35 MXN</span>
+                <div class="item-cantidad">
+                    <label for="tostadas_jr">Cantidad:</label>
+                    <input type="number" id="tostadas_jr" name="tostadas_jr" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Tostadas de la Siberia</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$65 MXN</span>
+                <div class="item-cantidad">
+                    <label for="tostadas_siberia">Cantidad:</label>
+                    <input type="number" id="tostadas_siberia" name="tostadas_siberia" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Tacos de la Siberia Jr.</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$25 MXN</span>
+                <div class="item-cantidad">
+                    <label for="tacos_siberia_jr">Cantidad:</label>
+                    <input type="number" id="tacos_siberia_jr" name="tacos_siberia_jr" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Tacos de la Siberia grandes</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$50 MXN</span>
+                <div class="item-cantidad">
+                    <label for="tacos_siberia_grandes">Cantidad:</label>
+                    <input type="number" id="tacos_siberia_grandes" name="tacos_siberia_grandes" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Enmoladas</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$75 MXN</span>
+                <div class="item-cantidad">
+                    <label for="enmoladas">Cantidad:</label>
+                    <input type="number" id="enmoladas" name="enmoladas" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Flautas</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$75 MXN</span>
+                <div class="item-cantidad">
+                    <label for="flautas">Cantidad:</label>
+                    <input type="number" id="flautas" name="flautas" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Tortas</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$80 MXN</span>
+                <div class="item-cantidad">
+                    <label for="tortas">Cantidad:</label>
+                    <input type="number" id="tortas" name="tortas" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Pepsi 1.5l</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$30 MXN</span>
+                <div class="item-cantidad">
+                    <label for="pepsi">Cantidad:</label>
+                    <input type="number" id="pepsi" name="pepsi" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Caldo litro</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$55 MXN</span>
+                <div class="item-cantidad">
+                    <label for="caldo_litro">Cantidad:</label>
+                    <input type="number" id="caldo_litro" name="caldo_litro" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Caldo 1/2L</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$45 MXN</span>
+                <div class="item-cantidad">
+                    <label for="caldo_medio">Cantidad:</label>
+                    <input type="number" id="caldo_medio" name="caldo_medio" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Enchiladas</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$75 MXN</span>
+                <div class="item-cantidad">
+                    <label for="enchiladas">Cantidad:</label>
+                    <input type="number" id="enchiladas" name="enchiladas" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Chilaquiles</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$75 MXN</span>
+                <div class="item-cantidad">
+                    <label for="chilaquiles">Cantidad:</label>
+                    <input type="number" id="chilaquiles" name="chilaquiles" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Ensalada de pollo</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$70 MXN</span>
+                <div class="item-cantidad">
+                    <label for="ensalada_pollo">Cantidad:</label>
+                    <input type="number" id="ensalada_pollo" name="ensalada_pollo" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Ensalada de coditos</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$65 MXN</span>
+                <div class="item-cantidad">
+                    <label for="ensalada_coditos">Cantidad:</label>
+                    <input type="number" id="ensalada_coditos" name="ensalada_coditos" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Ensalada Mixta</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$65 MXN</span>
+                <div class="item-cantidad">
+                    <label for="ensalada_mixta">Cantidad:</label>
+                    <input type="number" id="ensalada_mixta" name="ensalada_mixta" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Consomé litro</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$45 MXN</span>
+                <div class="item-cantidad">
+                    <label for="consome_litro">Cantidad:</label>
+                    <input type="number" id="consome_litro" name="consome_litro" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="item-pedido">
+                <div class="item-info">
+                    <h3>Consomé 1/2L</h3>
+                    <p></p>
+                </div>
+                <span class="item-precio">$35 MXN</span>
+                <div class="item-cantidad">
+                    <label for="consome_medio">Cantidad:</label>
+                    <input type="number" id="consome_medio" name="consome_medio" value="0" min="0">
+                </div>
+            </div>
+        </form>
+
+        <div class="resumen-pedido">
+            <h3>Resumen de tu pedido</h3>
+            <ul id="lista-pedido">
+            </ul>
+            <div class="total-pedido">
+                Total: <span id="total">0.00 MXN</span>
+            </div>
+            <a href="#" class="boton-pagar" id="boton-pagar">Pagar con QR</a>
+        </div>
+
+        <div class="qr-pago" style="display: none;">
+            <h2>¡Escanea para pagar!</h2>
+            <img id="qr-imagen" src="" alt="Código QR para pago" style="max-width: 200px; border: 1px solid #ccc; border-radius: 5px;">
+            <p>Escanea este código QR con tu aplicación de pagos.</p>
+            <p id="mensaje-pago"></p>
+        </div>
+
+        <a href="index.html" class="volver-inicio">Volver al inicio</a>
+    </div>
+
+    <script>
+        const formularioPedido = document.getElementById('formulario-pedido');
+        const listaPedido = document.getElementById('lista-pedido');
+        const totalElemento = document.getElementById('total');
+        const botonPagar = document.getElementById('boton-pagar');
+        const qrPagoDiv = document.querySelector('.qr-pago');
+        const qrImagen = document.getElementById('qr-imagen');
+        const mensajePago = document.getElementById('mensaje-pago');
+
+        const precios = {
+            pkt1: 165,
+            pkt2: 135,
+            pkt3: 180,
+            pkt4: 125,
+            pkt5: 155,
+            pkt6: 140,
+            pkt_individual: 90,
+            pkt_familiar: 320,
+            tostadas_jr: 35,
+            tostadas_siberia: 65,
+            tacos_siberia_jr: 25,
+            tacos_siberia_grandes: 50,
+            enmoladas: 75,
+            flautas: 75,
+            tortas: 80,
+            pepsi: 30,
+            caldo_litro: 55,
+            caldo_medio: 45,
+            enchiladas: 75,
+            chilaquiles: 75,
+            ensalada_pollo: 70,
+            ensalada_coditos: 65,
+            ensalada_mixta: 65,
+            consome_litro: 45,
+            consome_medio: 35
+        };
+
+        formularioPedido.addEventListener('input', function (event) {
+            if (event.target.type === 'number') {
+                actualizarPedido();
+            }
+        });
+
+        botonPagar.addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe de la manera tradicional
+            enviarPedido();
+        });
+
+        function actualizarPedido() {
+            listaPedido.innerHTML = '';
+            let total = 0;
+            let pedido = []; // Array para almacenar los detalles del pedido para enviar al servidor
+
+            for (const key in precios) {
+                const cantidad = parseInt(document.getElementById(key).value);
+                if (cantidad > 0) {
+                    const precioUnitario = precios[key];
+                    const precioTotalItem = cantidad * precioUnitario;
+                    total += precioTotalItem;
+                    const nombreItem = document.querySelector(`label[for="${key}"]`) ? document.querySelector(`label[for="${key}"]`).textContent.replace('Cantidad:', '').trim() : document.querySelector(`#${key}`).closest('.item-pedido').querySelector('.item-info h3').textContent;
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${nombreItem} x ${cantidad} - $${precioTotalItem.toFixed(2)} MXN`;
+                    listaPedido.appendChild(listItem);
+
+                    // Agrega el item al array del pedido
+                    pedido.push({
+                        producto: nombreItem,
+                        cantidad: cantidad,
+                        precioUnitario: precioUnitario,
+                        precioTotal: precioTotalItem
+                    });
+                }
+            }
+            totalElemento.textContent = total.toFixed(2) + ' MXN';
+            // Almacena el pedido en un objeto para facilitar el envío
+            sessionStorage.setItem('pedido', JSON.stringify({
+                productos: pedido,
+                total: total
+            }));
+        }
+
+        function enviarPedido() {
+            const pedido = sessionStorage.getItem('pedido');
+
+            if (!pedido) {
+                alert('No hay productos en el pedido.');
+                return;
+            }
+
+            // Crear un objeto FormData para enviar los datos como un formulario
+            const formData = new FormData();
+            formData.append('pedido', pedido); // Enviar el pedido como una cadena JSON
+
+            // Realizar la petición POST al script PHP
+            fetch('procesar_pedido.php', {
+                method: 'POST',
+                body: formData, // Enviar los datos del formulario
+            })
+            .then(response => response.json()) // Esperar una respuesta JSON del servidor
+            .then(data => {
+                // Manejar la respuesta del servidor
+                if (data.success) {
+                    mensajePago.textContent = 'Pedido realizado con éxito. ¡Gracias por su compra!';
+                    qrImagen.src = data.qr_code; // Asignar la URL del código QR
+                    qrPagoDiv.style.display = 'block'; // Mostrar el div del código QR
+                    formularioPedido.reset();
+                    actualizarPedido(); // Limpiar el resumen del pedido
+                    sessionStorage.removeItem('pedido'); // Eliminar el pedido de la sesión
+                    // Redirigir a la página de inicio después de unos segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Reemplaza 'index.html' con la URL de tu página de inicio
+                    }, 5000); // 5 segundos
+                } else {
+                    alert('Error al procesar el pedido: ' + data.message);
+                }
+            })
+            .catch(error => {
+                // Manejar errores de la petición
+                console.error('Error:', error);
+                alert('Ocurrió un error al enviar el pedido. Por favor, inténtelo de nuevo.');
+            });
+        }
+    </script>
+</body>
+</html>
